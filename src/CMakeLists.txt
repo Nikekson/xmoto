@@ -7,6 +7,11 @@ option(PREFER_SYSTEM_ODE "Prefer system ODE" ON)
 option(PREFER_SYSTEM_XDG "Prefer system XDG" ON)
 option(ALLOW_DEV "Enable some development/debug features" OFF)
 
+if(CMAKE_CROSSCOMPILING)
+  set(MINGW32_LIBS "-lgcc_eh -Wl,-Bstatic -lwinpthread -Wl,-Bdynamic")
+  set(CMAKE_EXE_LINKER_FLAGS "-static-libgcc -static-libstdc++")
+endif()
+
 if(CMAKE_GENERATOR MATCHES "Ninja")
   message("-- Using Ninja, try to colorize")
   check_cxx_compiler_flag(-fdiagnostics-color FLAG_CXX_DIAGNOSTICS_COLOR)
@@ -413,6 +418,7 @@ target_link_libraries(xmoto PUBLIC
   $<${USE_SYSTEM_XDG}:${XDG_LIBRARY}>
   $<$<NOT:${USE_SYSTEM_XDG}>:xdgbasedir>
   ${ZLIB_LIBRARIES}
+  ${MINGW32_LIBS}
 )
 
 set_property(TARGET xmoto PROPERTY CXX_STANDARD 11)
