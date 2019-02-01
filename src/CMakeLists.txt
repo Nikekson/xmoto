@@ -521,7 +521,7 @@ if(CMAKE_CROSSCOMPILING)
             "${PROJECT_SOURCE_DIR}/bin/Textures/Fonts"
             "${PROJECT_BINARY_DIR}/win32-target/Textures/Fonts/"
         COMMAND ${CMAKE_COMMAND} -E copy
-            "${PROJECT_SOURCE_DIR}/README"
+            "${PROJECT_SOURCE_DIR}/README.md"
             "${PROJECT_BINARY_DIR}/win32-target/README.txt"
         COMMAND ${CMAKE_COMMAND} -E copy
         "${PROJECT_SOURCE_DIR}/COPYING"
