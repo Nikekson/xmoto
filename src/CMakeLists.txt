@@ -494,47 +494,16 @@ endif()
 # chipmunk on Windows
 target_compile_options(xmoto PRIVATE $<$<COMPILE_LANGUAGE:CXX>:-fpermissive>)
 
-install(TARGETS xmoto
-  RUNTIME DESTINATION bin
-)
 
-if(CMAKE_CROSSCOMPILING)
-    add_custom_target(package_win32
-        WORKING_DIRECTORY "${PROJECT_SOURCE_DIR}"
-        COMMAND ${CMAKE_COMMAND} -E make_directory "${PROJECT_BINARY_DIR}/win32-target"
-        COMMAND ${CMAKE_COMMAND} -E tar xvf "${PROJECT_SOURCE_DIR}/mingw_lib.zip"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${PROJECT_SOURCE_DIR}/mingw_lib"
-            "${PROJECT_BINARY_DIR}/win32-target/"
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "${PROJECT_BINARY_DIR}/src/xmoto.exe"
-            "${PROJECT_BINARY_DIR}/bin/xmoto.bin"
-            "${PROJECT_BINARY_DIR}/win32-target/"
-        COMMAND i686-w64-mingw32-strip "${PROJECT_BINARY_DIR}/win32-target/xmoto.exe"
-        COMMAND ${CMAKE_COMMAND} -E make_directory
-            "${PROJECT_BINARY_DIR}/win32-target/Textures/Musics"
-            "${PROJECT_BINARY_DIR}/win32-target/Textures/Fonts"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${PROJECT_SOURCE_DIR}/bin/Textures/Musics"
-            "${PROJECT_BINARY_DIR}/win32-target/Textures/Musics/"
-        COMMAND ${CMAKE_COMMAND} -E copy_directory
-            "${PROJECT_SOURCE_DIR}/bin/Textures/Fonts"
-            "${PROJECT_BINARY_DIR}/win32-target/Textures/Fonts/"
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "${PROJECT_SOURCE_DIR}/README.md"
-            "${PROJECT_BINARY_DIR}/win32-target/README.txt"
-        COMMAND ${CMAKE_COMMAND} -E copy
-        "${PROJECT_SOURCE_DIR}/COPYING"
-            "${PROJECT_BINARY_DIR}/win32-target/COPYING.txt"
-        COMMAND ${CMAKE_COMMAND} -E copy
-            "${PROJECT_SOURCE_DIR}/ChangeLog"
-            "${PROJECT_BINARY_DIR}/win32-target/ChangeLog.txt"
-        COMMAND unix2dos
-            "${PROJECT_BINARY_DIR}/win32-target/README.txt"
-            "${PROJECT_BINARY_DIR}/win32-target/COPYING.txt"
-            "${PROJECT_BINARY_DIR}/win32-target/ChangeLog.txt"
-    )
-    add_dependencies(package_win32 xmoto xmoto_pack)
+if(NOT WIN32)
+  install(TARGETS xmoto
+    RUNTIME DESTINATION bin
+  )
+else()
+  install(TARGETS xmoto
+    RUNTIME DESTINATION "${CMAKE_INSTALL_PREFIX}"
+  )
+  install(CODE "execute_process(COMMAND i686-w64-mingw32-strip ${CMAKE_INSTALL_PREFIX}/xmoto.exe)")
 endif()
 
 
